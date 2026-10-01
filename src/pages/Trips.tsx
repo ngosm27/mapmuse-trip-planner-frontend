@@ -406,7 +406,7 @@ export default function Trips({ onNav }) {
 							onClick={handleOpenDialog}
 							sx={{
 								backgroundColor: PURPLE,
-								color: "#fff",
+								// color: "#fff",
 								textTransform: "none",
 								fontWeight: 600,
 								borderRadius: 2,
@@ -427,7 +427,7 @@ export default function Trips({ onNav }) {
 							},
 						}}
 					>
-						<DialogTitle>New trip</DialogTitle>
+						<DialogTitle sx={{ color: PURPLE_DARK}}>New trip</DialogTitle>
 						<DialogContent>
 							<Stack spacing={2} sx={{ width: 420, mt: 1 }}>
 								<TextField

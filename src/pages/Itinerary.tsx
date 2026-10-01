@@ -95,6 +95,9 @@ function ActivityCard({ activity }) {
 					p: 3,
 					"&:last-child": { pb: 3 },
 					textAlign: "left",
+					justifyContent: "space-between",
+					alignItems: "flex-start",
+					gap: 2,
 				}}
 			>
 				{/* Category */}
@@ -375,8 +378,8 @@ export default function Itinerary({ trip, onNav }) {
 				>
 					{/* Back + title row */}
 					<Stack
-						sx={{ 
-							direction: "row",
+						direction="row"
+						sx={{
 							alignItems: "center",
 							gap: 1.5,
 						}}
@@ -503,9 +506,9 @@ export default function Itinerary({ trip, onNav }) {
 
 			{/* Activities */}
 			<Box
-				sx={{ flex: 1, overflowY: "auto", px: { xs: 2, md: 4 }, py: 3 }}
+				sx={{ flex: 1, overflowY: "auto", px: { xs: 2, md: 4}, py: 3 }}
 			>
-				<Box sx={{ maxWidth: 900, mx: "auto" }}>
+				<Box sx={{ maxWidth: 900, mx: "auto"}}>
 					{loading ? (
 						<>
 							{[1, 2, 3].map((n) => (
@@ -525,10 +528,10 @@ export default function Itinerary({ trip, onNav }) {
 								>
 									{/* Day heading */}
 									<Stack
-										sx={{ 
+										direction="row"
+										sx={{
 											gap: 2,
-											direction: "row",
-											alignItems: "center"
+											alignItems: "center",
 										}}
 									>
 										<Box
@@ -584,10 +587,10 @@ export default function Itinerary({ trip, onNav }) {
 										<Box
 											sx={{
 												py: 3,
-												textAlign: "center",
 												border: "1px dashed #e5e7eb",
 												borderRadius: 3,
 												color: "#d1d5db",
+
 											}}
 										>
 											<Typography variant="body2">
