@@ -14,7 +14,7 @@ function Profile() {
 
     const menuItems = [
         { title: "Manage Account" },
-        { title: "Your Trips" },
+        // { title: "Your Trips" },
         { title: "Travel Preferences" },
         { title: "Settings" },
     ];
@@ -23,8 +23,8 @@ function Profile() {
         switch (activeItem) {
             case "Manage Account":
                 return <ManageAccount profile={profile} />;
-            case "Your Trips":
-                return <YourTrips profile={profile} />;
+            // case "Your Trips":
+            //     return <YourTrips profile={profile} />;
             case "Travel Preferences":
                 return <TravelPreferences profile={profile} />;
             case "Settings":

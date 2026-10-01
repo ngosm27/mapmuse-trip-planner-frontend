@@ -59,7 +59,7 @@ function getDatesInRange(startDate, endDate) {
 	const cur = new Date(startDate);
 	const end = new Date(endDate);
 	while (cur <= end) {
-		dates.push(cur.toISOString().split("T")[0]);
+		(dates as string[]).push(cur.toISOString().split("T")[0]);
 		cur.setDate(cur.getDate() + 1);
 	}
 	return dates;
@@ -76,6 +76,7 @@ function formatTabDate(dateStr) {
 // ── Activity card ─────────────────────────────────────────────────────────────
 function ActivityCard({ activity }) {
 	const cat = categoryStyle(activity.category);
+
 	return (
 		<Card
 			elevation={0}
@@ -84,96 +85,128 @@ function ActivityCard({ activity }) {
 				borderRadius: 3,
 				mb: 2,
 				transition: "box-shadow 0.15s",
-				"&:hover": { boxShadow: "0 4px 16px rgba(139,92,246,0.1)" },
+				"&:hover": {
+					boxShadow: "0 4px 16px rgba(139,92,246,0.1)",
+				},
 			}}
 		>
-			<CardContent sx={{ p: 3, "&:last-child": { pb: 3 } }}>
+			<CardContent
+				sx={{
+					p: 3,
+					"&:last-child": { pb: 3 },
+					textAlign: "left",
+				}}
+			>
+				{/* Category */}
 				<Stack
 					direction="row"
-					alignItems="flex-start"
-					justifyContent="space-between"
-					gap={2}
+					sx={{
+						mb: 1,
+						gap: 1,
+						alignItems: "center",
+					}}
 				>
-					<Box sx={{ flex: 1 }}>
-						<Stack
-							direction="row"
-							alignItems="center"
-							gap={1}
-							sx={{ mb: 1 }}
-						>
-							<Chip
-								label={cat.label}
-								size="small"
-								sx={{
-									backgroundColor: cat.bg,
-									color: cat.color,
-									fontWeight: 600,
-									fontSize: "0.7rem",
-									height: 22,
-								}}
-							/>
-						</Stack>
+					<Chip
+						label={cat.label}
+						size="small"
+						sx={{
+							backgroundColor: cat.bg,
+							color: cat.color,
+							fontWeight: 600,
+							fontSize: "0.7rem",
+							height: 22,
+						}}
+					/>
+				</Stack>
 
-						<Typography
-							variant="h6"
-							sx={{
-								fontWeight: 700,
-								color: "#1a1a1a",
-								fontSize: "1rem",
-								mb: 0.5,
+				{/* Activity name / website link */}
+				<Typography
+					variant="h6"
+					sx={{
+						textAlign: "left",
+						fontWeight: 600,
+						fontSize: "1.1rem",
+						mb: 1,
+					}}
+				>
+					{activity.websiteUrl ? (
+						<a
+							href={activity.websiteUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							style={{
+								color: "#6A1B9A",
+								textDecoration: "underline",
+								cursor: "pointer",
 							}}
 						>
 							{activity.activityName}
-						</Typography>
-
-						{activity.location && (
-							<Stack
-								direction="row"
-								alignItems="center"
-								gap={0.5}
-								sx={{ mb: 0.5 }}
-							>
-								<PlaceIcon
-									sx={{ fontSize: 14, color: "#9ca3af" }}
-								/>
-								<Typography
-									variant="body2"
-									sx={{ color: "#6b7280" }}
-								>
-									{activity.location}
-								</Typography>
-							</Stack>
-						)}
-					</Box>
-
-					{/* Time block */}
-					{(activity.startTime || activity.endTime) && (
-						<Box sx={{ textAlign: "right", flexShrink: 0 }}>
-							<Stack
-								direction="row"
-								alignItems="center"
-								gap={0.5}
-								justifyContent="flex-end"
-							>
-								<AccessTimeIcon
-									sx={{ fontSize: 14, color: PURPLE }}
-								/>
-								<Typography
-									variant="body2"
-									sx={{
-										color: "#7c3aed",
-										fontWeight: 600,
-										fontSize: "0.85rem",
-									}}
-								>
-									{formatTime(activity.startTime)}
-									{activity.endTime &&
-										` – ${formatTime(activity.endTime)}`}
-								</Typography>
-							</Stack>
-						</Box>
+						</a>
+					) : (
+						activity.activityName
 					)}
-				</Stack>
+				</Typography>
+
+				{/* Location */}
+				{activity.location && (
+					<Stack
+						direction="row"
+						sx={{
+							alignItems: "center",
+							gap: 0.5,
+							mb: 1,
+						}}
+					>
+						<PlaceIcon
+							sx={{
+								fontSize: 16,
+								color: "#9ca3af",
+							}}
+						/>
+
+						<Typography
+							variant="body2"
+							sx={{
+								color: "#6b7280",
+								textAlign: "left",
+							}}
+						>
+							{activity.location}
+						</Typography>
+					</Stack>
+				)}
+
+				{/* Time */}
+				{(activity.startTime || activity.endTime) && (
+					<Stack
+						direction="row"
+						sx={{
+							alignItems: "center",
+							gap: 0.5,
+						}}
+					>
+						<AccessTimeIcon
+							sx={{
+								fontSize: 16,
+								color: PURPLE,
+							}}
+						/>
+
+						<Typography
+							variant="body2"
+							sx={{
+								color: "#7c3aed",
+								fontWeight: 600,
+								fontSize: "0.85rem",
+								textAlign: "left",
+							}}
+						>
+							{formatTime(activity.startTime)}
+							{activity.endTime &&
+								` – ${formatTime(activity.endTime)}`}
+						</Typography>
+					</Stack>
+				)}
 			</CardContent>
 		</Card>
 	);
@@ -201,10 +234,10 @@ function ActivitySkeleton() {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function Itinerary({ trip, onNav }) {
-	const [activities, setActivities] = useState([]);
+	const [activities, setActivities] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [activeDate, setActiveDate] = useState(null);
-	const dateRefs = useRef({});
+	const [activeDate, setActiveDate] = useState<string | null>(null);
+	const dateRefs = useRef<Record<string, HTMLElement | null>>({});
 
 	const dates = trip ? getDatesInRange(trip.startDate, trip.endDate) : [];
 
@@ -252,7 +285,7 @@ export default function Itinerary({ trip, onNav }) {
 						: [],
 				);
 
-				console.log("🗂️ All activities:", allActivities);
+				// console.log("🗂️ All activities:", allActivities);
 				setActivities(allActivities);
 			})
 			.catch((err) => {
@@ -276,7 +309,7 @@ export default function Itinerary({ trip, onNav }) {
 	}, [trip]);
 
 	// Group activities by date
-	const byDate = activities.reduce((acc, a) => {
+	const byDate = activities.reduce<Record<string, any[]>>((acc, a) => {
 		const d = a.date ?? "unscheduled";
 		if (!acc[d]) acc[d] = [];
 		acc[d].push(a);
@@ -342,10 +375,11 @@ export default function Itinerary({ trip, onNav }) {
 				>
 					{/* Back + title row */}
 					<Stack
-						direction="row"
-						alignItems="center"
-						gap={1.5}
-						sx={{ mb: 1.5 }}
+						sx={{ 
+							direction: "row",
+							alignItems: "center",
+							gap: 1.5,
+						}}
 					>
 						<IconButton
 							size="small"
@@ -486,15 +520,16 @@ export default function Itinerary({ trip, onNav }) {
 							return (
 								<Box
 									key={date}
-									ref={(el) => (dateRefs.current[date] = el)}
+									ref={(el) => { dateRefs.current[date] = el as HTMLElement | null; }}
 									sx={{ mb: 4, scrollMarginTop: 20 }}
 								>
 									{/* Day heading */}
 									<Stack
-										direction="row"
-										alignItems="center"
-										gap={2}
-										sx={{ mb: 2 }}
+										sx={{ 
+											gap: 2,
+											direction: "row",
+											alignItems: "center"
+										}}
 									>
 										<Box
 											sx={{

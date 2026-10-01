@@ -328,6 +328,10 @@ export default function Trips({ onNav }) {
 			await loadTrips();
 
 		} catch (err) {
+			console.error("Error creating trip:", err);
+			console.error("Error response:", err.response);
+			console.error("Error response data:", err.response?.data);
+
 			setFormError(
 				"Unable to create a new trip. Please try again.",
 			);
